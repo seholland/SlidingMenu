@@ -224,8 +224,8 @@ public class CustomViewBehind extends ViewGroup {
 						(x-getBehindWidth())*mScrollScale), y);				
 			}
 		}
-		if (vis == View.GONE)
-			Log.v(TAG, "behind gone");
+//		if (vis == View.GONE)
+//			Log.v(TAG, "behind gone");
 		setVisibility(vis);
 	}
 

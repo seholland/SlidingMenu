@@ -597,8 +597,8 @@ public class CustomViewAbove extends ViewGroup {
 		} else {
 			allowed = mViewBehind.menuClosedSlideAllowed(dx);
 		}
-		if (DEBUG)
-			Log.v(TAG, "this slide allowed " + allowed + " dx: " + dx);
+//		if (DEBUG)
+//			Log.v(TAG, "this slide allowed " + allowed + " dx: " + dx);
 		return allowed;
 	}
 
@@ -619,8 +619,8 @@ public class CustomViewAbove extends ViewGroup {
 
 		final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
-		if (action == MotionEvent.ACTION_DOWN && DEBUG)
-			Log.v(TAG, "Received ACTION_DOWN");
+//		if (action == MotionEvent.ACTION_DOWN && DEBUG)
+//			Log.v(TAG, "Received ACTION_DOWN");
 
 		if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP
 				|| (action != MotionEvent.ACTION_DOWN && mIsUnableToDrag)) {
@@ -641,7 +641,7 @@ public class CustomViewAbove extends ViewGroup {
 			final float yDiff = Math.abs(y - mLastMotionY);
 //			if (DEBUG) Log.v(TAG, "onInterceptTouch moved to:(" + x + ", " + y + "), diff:(" + xDiff + ", " + yDiff + "), mLastMotionX:" + mLastMotionX);
 			if (xDiff > mTouchSlop && xDiff > yDiff && thisSlideAllowed(dx)) {
-				if (DEBUG) Log.v(TAG, "Starting drag! from onInterceptTouch");
+//				if (DEBUG) Log.v(TAG, "Starting drag! from onInterceptTouch");
 				startDrag();
 				mLastMotionX = x;
 				setScrollingCacheEnabled(true);
@@ -723,12 +723,12 @@ public class CustomViewAbove extends ViewGroup {
 				final float yDiff = Math.abs(y - mLastMotionY);
 //				if (DEBUG) Log.v(TAG, "onTouch moved to:(" + x + ", " + y + "), diff:(" + xDiff + ", " + yDiff + ")\nmIsBeingDragged:" + mIsBeingDragged + ", mLastMotionX:" + mLastMotionX);
 				if ((xDiff > mTouchSlop || mQuickReturn) && xDiff > yDiff && thisSlideAllowed(dx)) {
-					if (DEBUG) Log.v(TAG, "Starting drag! from onTouch");
+//					if (DEBUG) Log.v(TAG, "Starting drag! from onTouch");
 					startDrag();
 					mLastMotionX = x;
 					setScrollingCacheEnabled(true);
 				} else {
-					if (DEBUG) Log.v(TAG, "onTouch returning false");
+//					if (DEBUG) Log.v(TAG, "onTouch returning false");
 					return false;
 				}
 			}
@@ -834,7 +834,7 @@ public class CustomViewAbove extends ViewGroup {
 	}
 
 	protected float getPercentOpen() {
-		if (DEBUG) Log.v(TAG, ""+ Math.abs(mScrollX-mContent.getLeft()) / getBehindWidth());
+//		if (DEBUG) Log.v(TAG, ""+ Math.abs(mScrollX-mContent.getLeft()) / getBehindWidth());
 		return Math.abs(mScrollX-mContent.getLeft()) / getBehindWidth();
 	}
 
@@ -851,7 +851,7 @@ public class CustomViewAbove extends ViewGroup {
 	private float mScrollX = 0.0f;
 
 	private void onSecondaryPointerUp(MotionEvent ev) {
-		if (DEBUG) Log.v(TAG, "onSecondaryPointerUp called");
+//		if (DEBUG) Log.v(TAG, "onSecondaryPointerUp called");
 		final int pointerIndex = MotionEventCompat.getActionIndex(ev);
 		final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
 		if (pointerId == mActivePointerId) {
