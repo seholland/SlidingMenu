@@ -3,6 +3,7 @@ package com.slidingmenu.lib;
 import java.lang.reflect.Method;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,14 +14,15 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -28,6 +30,8 @@ import android.widget.RelativeLayout;
 import com.slidingmenu.lib.CustomViewAbove.OnPageChangeListener;
 
 public class SlidingMenu extends RelativeLayout {
+
+	private static final String TAG = "SlidingMenu";
 
 	public static final int SLIDING_WINDOW = 0;
 	public static final int SLIDING_CONTENT = 1;
@@ -195,14 +199,14 @@ public class SlidingMenu extends RelativeLayout {
 	 */
 	public SlidingMenu(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-
+		
 		LayoutParams behindParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mViewBehind = new CustomViewBehind(context);
 		addView(mViewBehind, behindParams);
 		LayoutParams aboveParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mViewAbove = new CustomViewAbove(context);
 		addView(mViewAbove, aboveParams);
-		// register the CustomViewBehind2 with the CustomViewAbove
+		// register the CustomViewBehind with the CustomViewAbove
 		mViewAbove.setCustomViewBehind(mViewBehind);
 		mViewBehind.setCustomViewAbove(mViewAbove);
 		mViewAbove.setOnPageChangeListener(new OnPageChangeListener() {
@@ -310,8 +314,8 @@ public class SlidingMenu extends RelativeLayout {
 			// save ActionBar themes that have transparent assets
 			decorChild.setBackgroundResource(background);
 			decor.removeView(decorChild);
-			setContent(decorChild);
 			decor.addView(this);
+			setContent(decorChild);
 			break;
 		case SLIDING_CONTENT:
 			mActionbarOverlay = actionbarOverlay;
@@ -319,7 +323,7 @@ public class SlidingMenu extends RelativeLayout {
 			ViewGroup contentParent = (ViewGroup)activity.findViewById(android.R.id.content);
 			View content = contentParent.getChildAt(0);
 			contentParent.removeView(content);
-			contentParent.addView(this, 0, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			contentParent.addView(this);
 			setContent(content);
 			// save people from having transparent backgrounds
 			if (content.getBackground() == null)
@@ -376,12 +380,13 @@ public class SlidingMenu extends RelativeLayout {
 	}
 
 	/**
-	 * Retrieves the current menu.
-	 * @return the current menu
+	 * Retrieves the main menu.
+	 * @return the main menu
 	 */
 	public View getMenu() {
 		return mViewBehind.getContent();
 	}
+
 	/**
 	 * Set the secondary behind view (right menu) content from a layout resource. The resource will be inflated, adding all top-level views
 	 * to the behind view.
@@ -545,6 +550,15 @@ public class SlidingMenu extends RelativeLayout {
 	public boolean isMenuShowing() {
 		return mViewAbove.getCurrentItem() == 0 || mViewAbove.getCurrentItem() == 2;
 	}
+	
+	/**
+	 * Checks if is the behind view showing.
+	 *
+	 * @return Whether or not the behind view is showing
+	 */
+	public boolean isSecondaryMenuShowing() {
+		return mViewAbove.getCurrentItem() == 2;
+	}
 
 	/**
 	 * Gets the behind offset.
@@ -640,6 +654,22 @@ public class SlidingMenu extends RelativeLayout {
 	 */
 	public float getBehindScrollScale() {
 		return mViewBehind.getScrollScale();
+	}
+	
+	/**
+	 * Gets the touch mode margin threshold
+	 * @return the touch mode margin threshold
+	 */
+	public int getTouchmodeMarginThreshold() {
+		return mViewBehind.getMarginThreshold();
+	}
+	
+	/**
+	 * Set the touch mode margin threshold
+	 * @param touchmodeMarginThreshold
+	 */
+	public void setTouchmodeMarginThreshold(int touchmodeMarginThreshold) {
+		mViewBehind.setMarginThreshold(touchmodeMarginThreshold);
 	}
 
 	/**
@@ -945,9 +975,34 @@ public class SlidingMenu extends RelativeLayout {
 		int rightPadding = insets.right;
 		int topPadding = insets.top;
 		int bottomPadding = insets.bottom;
-		if (!mActionbarOverlay)
+		if (!mActionbarOverlay) {
+			Log.v(TAG, "setting padding!");
 			setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+		}
 		return true;
+	}
+	
+	private Handler mHandler = new Handler();
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void manageLayers(float percentOpen) {
+		if (Build.VERSION.SDK_INT < 11) return;
+
+		boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
+		final int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+
+		if (layerType != getContent().getLayerType()) {
+			mHandler.post(new Runnable() {
+				public void run() {
+					Log.v(TAG, "changing layerType. hardware? " + (layerType == View.LAYER_TYPE_HARDWARE));
+					getContent().setLayerType(layerType, null);
+					getMenu().setLayerType(layerType, null);
+					if (getSecondaryMenu() != null) {
+						getSecondaryMenu().setLayerType(layerType, null);
+					}
+				}
+			});
+		}
 	}
 
 }
