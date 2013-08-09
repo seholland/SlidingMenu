@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="/Eclipse/android-sdk-mac_86/extras/android/compatibility/v4/android-support-v4.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="/Users/shawnholland/ActionBarSherlock/library/bin/actionbarsherlock.jar" sourcepath="/ActionBarSherlock/src"/>
+	<classpathentry exported="true" kind="lib" path="/Users/shawnholland/cheftap/NomBox/libs/android-support-v4.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
