@@ -7,6 +7,8 @@ to use it all you want in your Android apps provided that you cite this project 
 
 SlidingMenu is currently used in some awesome Android apps. Here's a list of some of them: 
 * [Foursquare][15]
+* [LinkedIn][19]
+* [Zappos][20]
 * [Rdio][8]
 * [Evernote Food][18]
 * [Plume][4]
@@ -148,7 +150,7 @@ Developed By
 License
 -------
 
-    Copyright 2012 Jeremy Feinstein
+    Copyright 2012-2014 Jeremy Feinstein
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -180,3 +182,5 @@ License
 [16]: https://play.google.com/store/apps/details?id=com.mlssoccer
 [17]: https://play.google.com/store/apps/details?id=com.ninegag.android.app
 [18]: https://play.google.com/store/apps/details?id=com.evernote.food
+[19]: https://play.google.com/store/apps/details?id=com.linkedin.android
+[20]: https://play.google.com/store/apps/details?id=com.zappos.android
